@@ -1,3 +1,5 @@
+using MC.ApplicationServices.Implementations;
+using MC.ApplicationServices.Interfaces;
 using MC.Data.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -9,6 +11,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlServer(connectionString)
 );
+
+builder.Services.AddScoped<IMoviesService, MoviesService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

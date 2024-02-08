@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implementations\" />
+    <ProjectReference Include="..\MC.Data\MC.Data.csproj" />
   </ItemGroup>
 
 </Project>

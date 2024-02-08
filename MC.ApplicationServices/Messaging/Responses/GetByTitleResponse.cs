@@ -2,6 +2,6 @@
 {
     public class GetByTitleResponse : ResponseServiceBase
     {
-        public List<MovieModel> Movies { get; set; }
+        public MovieModel Movie { get; set; }
     }
 }
