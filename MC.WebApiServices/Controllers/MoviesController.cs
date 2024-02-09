@@ -2,19 +2,17 @@
 using MC.ApplicationServices.Messaging.Requests;
 using MC.ApplicationServices.Messaging.Responses;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace MC.WebApiServices.Controllers
-{
-    
+{    
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    public class MovieController : ControllerBase
+    public class MoviesController : ControllerBase
     {
         private readonly IMoviesService _service;
 
-        public MovieController(IMoviesService service)
+        public MoviesController(IMoviesService service)
         {
             _service = service;
         }

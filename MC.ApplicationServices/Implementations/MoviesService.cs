@@ -1,22 +1,26 @@
 ﻿using MC.ApplicationServices.Interfaces;
+using MC.ApplicationServices.Messaging;
 using MC.ApplicationServices.Messaging.Requests;
 using MC.ApplicationServices.Messaging.Responses;
 using MC.Data.Data;
 using MC.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace MC.ApplicationServices.Implementations
 {
     public class MoviesService : IMoviesService
     {
-        public MoviesDbContext _context;
+        private readonly ILogger<MoviesService> _logger;
+        private readonly MoviesDbContext _context;
 
         /// <summary>
         /// Movies service constructor.
         /// </summary>
-        public MoviesService(MoviesDbContext context) 
+        public MoviesService(ILogger<MoviesService> logger, MoviesDbContext context) 
         {
             _context = context;
+            _logger = logger;
         }
 
         /// <inheritdoc />      
@@ -24,12 +28,19 @@ namespace MC.ApplicationServices.Implementations
         {
             GetByTitleResponse response = new GetByTitleResponse();
             var movie = await _context.Movies.SingleOrDefaultAsync(x=> x.Title == request.Title);
+            if(movie is null)
+            {
+                _logger.LogInformation("");
+                response.StatusCode = BusinessStatusCodeEnum.MissingObject;
+                return response;
+            }
             response.Movie = new MovieModel() 
             {
                 Title = movie?.Title,
                 Description = movie?.Description,
                 ReleaseDate = movie?.ReleaseDate,
             };
+
             return response;
         }
 
@@ -40,7 +51,7 @@ namespace MC.ApplicationServices.Implementations
             await _context.Movies.AddAsync(new Movie() {
                 Title = movie.Title,
                 Description = movie?.Description,
-                ReleaseDate = movie?.ReleaseDate,
+                ReleaseDate = movie?.ReleaseDate ?? DateTime.Now,
             });
 
             await _context.SaveChangesAsync();
